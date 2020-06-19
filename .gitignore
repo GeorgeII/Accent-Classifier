@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pycharm
+.idea
+
+# Add directory layout only without a dataset itself
+data/American/chunks/*
+data/American/mp3/*
+data/American/spectrograms/*
+data/American/wav/*
+data/British/chunks/*
+data/British/mp3/*
+data/British/spectrograms/*
+data/British/wav/*
+data/general sounds/*
+data/Others/*
+data/output audio/*
