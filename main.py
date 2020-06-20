@@ -20,6 +20,14 @@ def main():
     filecontrol.get_spectrograms(pathlib.Path("data/British/chunks"), pathlib.Path("data/British/spectrograms"))
     """
 
+    # extract paths and labels as lists. Label 0 is for American, 1 is for British
+    filenames = filecontrol.get_absolute_paths("C:/Projects/Accent Classifier/data/American/spectrograms")
+    labels = [0] * len(filenames)
+    filenames += filecontrol.get_absolute_paths("C:/Projects/Accent Classifier/data/British/spectrograms")
+    labels += [1] * (len(filenames) - len(labels))
+
+
+
 
 if __name__ == "__main__":
     main()

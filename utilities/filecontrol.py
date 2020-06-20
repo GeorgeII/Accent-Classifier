@@ -88,3 +88,15 @@ def get_spectrograms(read_directory, write_directory):
             path_to_write = write_directory / pathlib.Path(filename).with_suffix(".png")
             plt.savefig(path_to_write)
             plt.close(fig)
+
+
+def get_absolute_paths(directory):
+    """
+    Gives absolute paths of files inside of a given directory.
+    :param directory: absolute path of directory with files
+    :return: absolute paths of files inside the given directory
+    """
+    path = pathlib.Path(directory).glob('**/*')
+    files = [x for x in path if x.is_file()]
+
+    return files
