@@ -1,5 +1,4 @@
 import librosa
-from librosa import display
 import os
 import subprocess
 import pathlib
@@ -10,8 +9,8 @@ from utilities import trimmer
 
 def get_chunks(read_directory, write_directory):
     """
-    Takes every WAV file in a given directory and cuts it into pieces which are called chunks.
-    If there is a file named 'Speech of Bob' then it will be cut and saved as 'Speech of Bob0', 'Speech of Bob1', etc. in
+    Takes every WAV file from a given directory and cuts it into pieces which are called chunks.
+    For instance, if there is a file named 'Speech of Bob' then it will be cut and saved as 'Speech of Bob0', 'Speech of Bob1', etc. in
     a given directory to write.
     Also removes pauses and quiet sounds.
     :param read_directory: pathlib.Path format preferably
@@ -55,28 +54,37 @@ def mp3_to_wav(read_directory, write_directory):
 
 def get_spectrograms(read_directory, write_directory):
     """
-    Transform given sound into a spectrogram and save it as an image.
+    Transforms all WAV sounds in a given directory into a spectrogram and saves them as images.
+
+    Details: reads chunks of speech. Creates an image as 2x2 of combined images.
+    In 1 row 1 column there's a simple STFT spectrogram. 1 row 2 column is a logarithmic scaled of STFT.
+    In 2 row 1 column it's a logarithmic scale of squared STFT. 2 row 2 column is filter-banks applied to STFT.
     :param read_directory: pathlib.Path format preferably
     :param write_directory: pathlib.Path format preferably
     """
     for file in os.scandir(read_directory):
         if file.name.endswith(".wav"):
             y, sampling_rate = librosa.load(file)
-            spectrogram = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
-            display.specshow(spectrogram)
+
+            # STFT
+            matrix_stft = np.abs(librosa.stft(y, n_fft=512))
+            # STFT + filterbank
+            melspectrogram = librosa.feature.melspectrogram(y=y, sr=sampling_rate)
+
+            fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, gridspec_kw={'hspace': 0, 'wspace': 0})
+
+            ax1.pcolormesh(np.abs(matrix_stft), cmap='jet')
+            ax2.pcolormesh(np.log(np.abs(matrix_stft)), cmap='jet')
+            ax3.pcolormesh(librosa.power_to_db(np.abs(matrix_stft) ** 2), cmap='jet')
+            ax4.pcolormesh(librosa.power_to_db(melspectrogram), cmap='jet')
+
+            ax1.axis('off')
+            ax2.axis('off')
+            ax3.axis('off')
+            ax4.axis('off')
+            plt.axis('off')
 
             filename = pathlib.Path(file).stem
             path_to_write = write_directory / pathlib.Path(filename).with_suffix(".png")
             plt.savefig(path_to_write)
-
-#%%
-y, sampling_rate = librosa.load(pathlib.Path("data/American/chunks/Inspiring Interview of Will Smith on December 2016 - How To Face Fear228.wav"))
-spectrogram = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
-display.specshow(spectrogram)
-plt.show()
-#%%
-from scipy import signal
-
-f, t, Zxx = signal.stft(y, sampling_rate, nperseg=512)
-plt.pcolormesh(t, f, np.abs(Zxx), cmap='jet')
-plt.show()
+            plt.close(fig)

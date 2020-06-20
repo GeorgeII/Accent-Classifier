@@ -1,20 +1,18 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
 # Pycharm
 .idea
 
-# Add directory layout only without a dataset itself
-data/American/chunks/*
-data/American/mp3/*
-data/American/spectrograms/*
-data/American/wav/*
-data/British/chunks/*
-data/British/mp3/*
-data/British/spectrograms/*
-data/British/wav/*
-data/general sounds/*
-data/Others/*
-data/output audio/*
+# Add directory layout only without a data itself. One file is needed to commit an empty directory.
+data/**/
+!data/American/chunks/Key & Peele - I Said Bitch40.wav
+!data/American/spectrograms/Key & Peele - I Said Bitch40.png
+!data/American/mp3/Key & Peele - I Said Bitch.mp3
+!data/American/wav/Key & Peele - I Said Bitch.wav
+!data/British/chunks/Lambda Calculus - Computerphile29.wav
+!data/British/spectrograms/Lambda Calculus - Computerphile29.png
+!data/British/mp3/Lambda Calculus - Computerphile.mp3
+!data/British/wav/Lambda Calculus - Computerphile.wav
