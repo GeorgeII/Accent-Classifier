@@ -21,12 +21,11 @@ def main():
     """
 
     # extract paths and labels as lists. Label 0 is for American, 1 is for British
-    filenames = filecontrol.get_absolute_paths("C:/Projects/Accent Classifier/data/American/spectrograms")
+    filenames = filecontrol.get_absolute_paths("/mnt/e89ecbe3-8e48-d601-e01e-41e38e48d601/datasets/Accent-Classifier/data/American/spectrograms")
     labels = [0] * len(filenames)
-    filenames += filecontrol.get_absolute_paths("C:/Projects/Accent Classifier/data/British/spectrograms")
+    filenames += filecontrol.get_absolute_paths("/mnt/e89ecbe3-8e48-d601-e01e-41e38e48d601/datasets/Accent-Classifier/data/British/spectrograms")
     labels += [1] * (len(filenames) - len(labels))
-
-
+    print(len(labels), len(filenames))
 
 
 if __name__ == "__main__":
