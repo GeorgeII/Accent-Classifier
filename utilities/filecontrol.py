@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from utilities import trimmer
 
 
-def get_chunks(read_directory, write_directory):
+def get_chunks(read_directory, write_directory, start_trim=15, end_trim=15, top_db=30):
     """
     Takes every WAV file from a given directory and cuts it into pieces which are called chunks.
     For instance, if there is a file named 'Speech of Bob' then it will be cut and saved as 'Speech of Bob0', 'Speech of Bob1', etc. in
@@ -19,8 +19,8 @@ def get_chunks(read_directory, write_directory):
     for file in os.scandir(read_directory):
         if file.name.endswith(".wav"):
             y, sampling_rate = librosa.load(file)
-            y = trimmer.trim_start_end(y, sampling_rate=sampling_rate)
-            chunks = trimmer.trim_pauses_and_split_into_chunks(y, top_db=30, chunk_duration=4,
+            y = trimmer.trim_start_end(y, start_trim=start_trim, end_trim=end_trim, sampling_rate=sampling_rate)
+            chunks = trimmer.trim_pauses_and_split_into_chunks(y, top_db=top_db, chunk_duration=4,
                                                                sampling_rate=sampling_rate)
 
             for idx, chunk in enumerate(chunks):

@@ -2,7 +2,7 @@ from librosa import effects
 import numpy as np
 
 
-def trim_start_end(audio, start_trim=10, end_trim=10, sampling_rate=22050):
+def trim_start_end(audio, start_trim=15, end_trim=15, sampling_rate=22050):
     """
     Cuts some audio from start and end because usually it's music with an intro/outro or noise.
 
