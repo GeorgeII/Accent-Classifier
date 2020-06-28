@@ -78,7 +78,7 @@ def main():
     filecontrol.mp3_to_wav(cur_path / pathlib.Path("data/inference/mp3"), cur_path / pathlib.Path("data/inference/wav"))
 
     print("Cutting WAV into chunks...")
-    filecontrol.get_chunks(cur_path / pathlib.Path("data/inference/wav"), cur_path / pathlib.Path("data/inference/chunks"))
+    filecontrol.get_chunks(cur_path / pathlib.Path("data/inference/wav"), cur_path / pathlib.Path("data/inference/chunks"), start_trim=1, end_trim=1)
 
     print("Getting spectrograms...")
     filecontrol.get_spectrograms(cur_path / pathlib.Path("data/inference/chunks"), cur_path / pathlib.Path("data/inference/spectrograms"))
@@ -96,15 +96,17 @@ def main():
     print("Final prediction: ", np.sum(preds) / len(preds))
     
     accent = ""
-    if np.rint(np.sum(preds)) == 0:
+    if np.sum(preds) / len(preds) < 0.5:
         accent = "American"
     else:
         accent = "British"
     
     print("It is " + accent + " English.")
+    
+    model.get_saliency_map(filenames, pathlib.Path("/home/george/Projects/test-env/Accent-Classifier/data/inference/saliency"))
 
-
-    inference_dirs = ["wav", "chunks", "spectrograms"]
+    # delete all files to free the memory
+    inference_dirs = ["wav", "chunks", "spectrograms", "saliency"]
     for directory in inference_dirs:
         files = glob.glob(f'data/inference/{directory}/*')
         for f in files:

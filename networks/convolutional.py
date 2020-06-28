@@ -5,7 +5,10 @@ import cv2
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
+import pathlib
 import numpy as np
+import matplotlib.pyplot as plt
+from collections.abc import Iterable
 
 
 NETWORK_INPUT_SIZE = (224, 224)
@@ -113,6 +116,35 @@ class ConvolutionalNetwork():
         """
         self.__model = torch.load(path, map_location=torch.device(device))
         self.__model.eval()
+
+    def get_saliency_map(self, filenames, write_directory):
+        """
+        Saves a heat map of the most important pixels while making prediction
+        """
+        if isinstance(filenames, Iterable) is not True:
+            filenames = [filenames]
+
+        for filename in filenames:
+            image = cv2.imread(str(filename))
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = resize(image, NETWORK_INPUT_SIZE)
+            image = add_pad(image, NETWORK_INPUT_SIZE)
+            resized_img = image
+            image = torch.tensor(image, dtype=torch.float).permute(2, 0, 1) / 255.
+            image = image[None, ...]
+
+            image.requires_grad_()
+            scores = self.__model(image)
+            score_max_index = scores.argmax()
+            score_max = scores[0, score_max_index]
+            score_max.backward()
+            saliency, _ = torch.max(image.grad.data.abs(), dim=1)
+
+            plt.figure()
+            plt.axis('off')
+            extracted_name = pathlib.Path(filename).stem + "_saliency"
+            path_to_write = write_directory / pathlib.Path(extracted_name).with_suffix(".png")
+            plt.imsave(path_to_write, saliency[0], cmap=plt.cm.hot)
 
     def get_model(self):
         return self.__model
