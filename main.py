@@ -88,7 +88,7 @@ def main():
     model.deep_load(cur_path / pathlib.Path("models/deep_copy_convolutional.pt"))
     #print(model.get_model())
     
-    filenames = filecontrol.get_absolute_paths("/home/george/Projects/test-env/Accent-Classifier/data/inference/spectrograms")
+    filenames = filecontrol.get_absolute_paths("/app/data/inference/spectrograms")
     print("Splitted into ", len(filenames), "parts")
     
     preds = np.argmax(model.predict(filenames), axis=1)
@@ -103,14 +103,16 @@ def main():
     
     print("It is " + accent + " English.")
     
-    model.get_saliency_map(filenames, pathlib.Path("/home/george/Projects/test-env/Accent-Classifier/data/inference/saliency"))
+    model.get_saliency_map(filenames, pathlib.Path("/app/data/inference/saliency"))
 
     # delete all files to free the memory
+    '''
     inference_dirs = ["wav", "chunks", "spectrograms", "saliency"]
     for directory in inference_dirs:
         files = glob.glob(f'data/inference/{directory}/*')
         for f in files:
             os.remove(f)
+    '''
 
 
 if __name__ == "__main__":
