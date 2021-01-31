@@ -1,7 +1,7 @@
 # This program classifies a given MP3-file of human speech into 2 types: American English or British English.
-## You need to put an MP3-file of someone's speech into the data/inference/mp3/ directory. The speech is better to be 17-25 seconds long.
+ You need to put an MP3-file of someone's speech into the data/inference/mp3/ directory. The speech is better to be 17-25 seconds long.
 
-### ONE MAJOR RESTRICTION IS REQUIRED: SPEECH MUST BE EITHER AMERICAN OR BRITISH. This means that if you try to predict German/Spanish/French/Russian/dog-barking/noise the neural network will not be able to distinguish them and you will get American or British prediction anyway.
+#### ONE MAJOR RESTRICTION IS REQUIRED: SPEECH MUST BE EITHER AMERICAN OR BRITISH. This means that if you try to predict German/Spanish/French/Russian/dog-barking/noise the neural network will not be able to distinguish them and you will get American or British prediction anyway.
 ### How does it work?
 The algorithm can be described as following:
 1. Convert an mp3 file into a wav file via FFmpeg.
@@ -11,7 +11,9 @@ The algorithm can be described as following:
 5. Create spectrograms on different scales and combine them into one image. Short-time Fourier Transform and its variation are used to get spectrograms. Here's how it looks:
 <img src="https://raw.githubusercontent.com/GeorgeII/Accent-Classifier/master/data/.readme pictures/scheme.png?raw=true" />
 
-6. Load a network that is already trained by me. Basically, I took a ResNet50 network pretrained on the ImageNet and added a custom output layer (transfer learning). So, it's a convolutional model.
+6. Load a network that is already trained out by me. Basically, I took the ResNet50 network pre-trained on the ImageNet dataset and added a custom output layer (transfer learning). So, it's a convolutional model:
+<img src="https://raw.githubusercontent.com/GeorgeII/Accent-Classifier/master/data/.readme pictures/transfer-learning3.png?raw=true" />
+
 7. Calculate an average prediction based on all pieces of the cut mp3.
 8. Additionally, a saliency map can be generated.
 
